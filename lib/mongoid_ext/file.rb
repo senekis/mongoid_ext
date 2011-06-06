@@ -24,8 +24,7 @@ module MongoidExt
       end
 
       if defined?(Magic) && Magic.respond_to?(:guess_string_mime_type)
-        data = io.read(256) # be nice with memory usage
-        self["content_type"] = options[:content_type] = Magic.guess_string_mime_type(data.to_s)
+        self["content_type"] = options[:content_type] = Magic.guess_string_mime_type(io.read)
         self["extension"] ||= options[:content_type].to_s.split("/").last.split("-").last
 
         if io.respond_to?(:rewind)
