@@ -162,10 +162,10 @@ module Versioning
         uuser_id = send(self.versionable_options[:owner_field]+"_was")||send(self.versionable_options[:owner_field])
         if !self.new? && !data.empty? && uuser_id
           max_versions = self.versionable_options[:max_versions].to_i
-          if self.version_ids.size >= max_versions
+          if max_versions > 0 && self.version_ids.size >= max_versions
             old = self.version_ids.slice!(0, max_versions)
             self.class.skip_callback(:save, :before, :save_version)
-            self.version_klass.delete_all(:_ids => old)
+            self.version_klass.delete(:_ids => old)
             self.save
             self.class.set_callback(:save, :before, :save_version)
           end
